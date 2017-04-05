@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature "Listing Articles", type: :feature do
+RSpec.feature "Listing Articles" do
 
   before do
     @article1 = Article.create(title: 'The first article', body: 'Lorem ipsum dolor sit amet, consectetur.')
