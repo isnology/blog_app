@@ -31,6 +31,8 @@ cucumber_options = {
   # notification: false
 }
 
+interactor :simple
+
 guard "cucumber", cucumber_options do
   watch(%r{^features/.+\.feature$})
   watch(%r{^features/support/.+$}) { "features" }
