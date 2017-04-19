@@ -1,4 +1,5 @@
 require 'rails_helper'
+include ApplicationHelper
 
 RSpec.feature 'Creating Articles' do
   
@@ -15,7 +16,7 @@ RSpec.feature 'Creating Articles' do
     click_button 'Create Article'
 
     expect(Article.last.user).to eq(@john)
-    expect(page).to have_content('Article has been created')
+    expect(page).to have_content(created_msg)
     expect(page.current_path).to eq(articles_path)
     expect(page).to have_content("Created by: #{@john.email}")
   end
@@ -27,7 +28,7 @@ RSpec.feature 'Creating Articles' do
     fill_in 'Body', with: ''
     click_button 'Create Article'
     
-    expect(page).to have_content('Article has not been created')
+    expect(page).to have_content(not_created_msg)
     expect(page).to have_content("Title can't be blank")
     expect(page).to have_content("Body can't be blank")
     

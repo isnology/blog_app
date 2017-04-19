@@ -13,7 +13,8 @@ RSpec.feature "Delete Articles", type: :feature do
     click_link @article.title
     click_link 'Delete Article'
     
-    expect(page).to have_content('Article has been deleted')
+    expect(page).to have_content(deleted_msg)
     expect(current_path).to eq(articles_path)
   end
+  
 end

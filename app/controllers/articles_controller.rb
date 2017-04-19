@@ -1,4 +1,5 @@
 class ArticlesController < ApplicationController
+  include ApplicationHelper
   before_action :authenticate_user!, except: [:index, :show]
   before_action :set_article, only: [:show, :edit, :update, :destroy]
   
@@ -14,10 +15,10 @@ class ArticlesController < ApplicationController
     @article = Article.new(article_params)
     @article.user = current_user
     if @article.save
-      flash[:success] = 'Article has been created'
+      flash[:success] = created_msg
       redirect_to articles_path
     else
-      flash.now[:danger] = 'Article has not been created'
+      flash.now[:danger] = not_created_msg
       render :new
     end
   end
@@ -26,30 +27,43 @@ class ArticlesController < ApplicationController
   end
   
   def edit
+    unless @article.user == current_user
+      flash[:alert] = only_edit_own_msg
+      redirect_to root_path
+    end
   end
   
   def update
-    if @article.update(article_params)
-      flash[:success] = 'Article has been updated'
-      redirect_to @article
+    unless @article.user == current_user
+      flash[:alert] = only_edit_own_msg
+      redirect_to root_path
     else
-      flash.now[:danger] = 'Article has not been updated'
-      render :edit
+      if @article.update(article_params)
+        flash[:success] = updated_msg
+        redirect_to @article
+      else
+        flash.now[:danger] = not_updated_msg
+        render :edit
+      end
     end
   end
   
   def destroy
-    if @article.destroy
-      flash[:success] = 'Article has been deleted'
-      redirect_to articles_path
+    unless @article.user == current_user
+      flash[:alert] = only_delete_own_msg
+      redirect_to root_path
+    else
+      if @article.destroy
+        flash[:success] = deleted_msg
+        redirect_to articles_path
+      end
     end
   end
   
   protected
   
     def resource_not_found
-      message = 'The article you are looking for could not be found'
-      flash[:alert] = message
+      flash[:alert] = not_found_msg
       redirect_to root_path
     end
   
